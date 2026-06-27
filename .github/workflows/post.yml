@@ -1,0 +1,29 @@
+name: Sex Ed Auto Poster
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'   # প্রতি ২ ঘণ্টায় (আপনি চাইলে বাড়াতে/কমাতে পারেন)
+  workflow_dispatch:
+
+permissions:
+  contents: write            # গিট পুশের জন্য আবশ্যক
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - run: pip install requests
+
+      - name: Run poster
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+        run: python bot.py
